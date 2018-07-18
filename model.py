@@ -191,6 +191,21 @@ class cyclegan(object):
                         global_step=step)
 
     def load(self, checkpoint_dir):
+ 
+        print(" [*] Reading checkpoint...")
+
+        model_dir = "%s_%s" % (self.dataset_dir, self.image_size)
+        checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
+
+        ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
+        if ckpt and ckpt.model_checkpoint_path:
+            ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
+            print(ckpt_name)
+            self.saver.restore(self.sess, os.path.join(checkpoint_dir, ckpt_name))
+            return True
+        else:
+            return False
+        """
         print(" [*] Reading checkpoint...")
 
         model_dir = "%s_%s" % (self.dataset_dir, self.image_size)
@@ -203,6 +218,9 @@ class cyclegan(object):
             return True
         else:
             return False
+        """
+        
+
 
     def sample_model(self, sample_dir, epoch, idx):
         dataA = glob('./datasets/{}/*.*'.format(self.dataset_dir + '/testA'))
